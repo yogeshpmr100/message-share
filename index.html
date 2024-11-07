@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beautiful Chat App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>Welcome to Chat</h2>
+            <button id="create-channel-btn">Create Channel</button>
+        </div>
+
+        <div class="channel-selection">
+            <button class="channel-btn" onclick="joinChannel('general')">General</button>
+            <button class="channel-btn" onclick="joinChannel('tech')">Tech</button>
+            <button class="channel-btn" onclick="joinChannel('gaming')">Gaming</button>
+        </div>
+
+        <div class="chat-box" id="chat-box">
+            <!-- Messages will appear here -->
+        </div>
+
+        <div class="input-box">
+            <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off">
+            <button id="send-btn">Send</button>
+            <button id="emoji-btn">😊</button>
+        </div>
+    </div>
+
+    <div class="password-modal" id="password-modal">
+        <h3>Enter Channel Password</h3>
+        <input type="password" id="channel-password" placeholder="Enter password to join" />
+        <button id="submit-password">Submit</button>
+    </div>
+
+    <div class="create-channel-modal" id="create-channel-modal">
+        <h3>Create New Channel</h3>
+        <input type="text" id="new-channel-name" placeholder="Enter Channel Name" />
+        <input type="password" id="new-channel-password" placeholder="Set Channel Password (Optional)" />
+        <button id="submit-create-channel">Create</button>
+        <button id="cancel-create-channel">Cancel</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
