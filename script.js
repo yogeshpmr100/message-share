@@ -1,9 +1,25 @@
 let currentChannel = 'general'; // Default channel
-let channels = {
+let channels = JSON.parse(localStorage.getItem('channels')) || {
     general: { password: "1234" },
     tech: { password: "techpass" },
     gaming: { password: "gamepass" }
 };
+
+// Save channels and messages to localStorage whenever they change
+function saveChannels() {
+    localStorage.setItem('channels', JSON.stringify(channels));
+}
+
+// Save messages for a channel
+function saveMessages(channel, messages) {
+    localStorage.setItem(channel, JSON.stringify(messages));
+}
+
+// Retrieve messages for a channel
+function getMessages(channel) {
+    const messages = localStorage.getItem(channel);
+    return messages ? JSON.parse(messages) : [];
+}
 
 // Add event listeners for buttons
 document.getElementById('send-btn').addEventListener('click', sendMessage);
@@ -22,6 +38,12 @@ function sendMessage() {
         messageDiv.classList.add('message');
         messageDiv.textContent = message;
         document.getElementById('chat-box').appendChild(messageDiv);
+
+        // Save message to the localStorage under current channel
+        const messages = getMessages(currentChannel);
+        messages.push(message);
+        saveMessages(currentChannel, messages);
+
         messageInput.value = "";
         document.getElementById('chat-box').scrollTop = document.getElementById('chat-box').scrollHeight;
     }
@@ -50,6 +72,7 @@ function checkPassword(channel, correctPassword) {
     if (passwordInput === correctPassword) {
         alert(`You have successfully joined the ${channel} channel!`);
         document.getElementById('password-modal').style.display = 'none';
+        currentChannel = channel; // Set current channel
         displayChannelMessages(channel); // Load the messages of the channel
     } else {
         alert("Incorrect password. Please try again.");
@@ -75,6 +98,7 @@ function createNewChannel() {
 
     if (channelName && !channels[channelName]) {
         channels[channelName] = { password: channelPassword || "" };
+        saveChannels();  // Save the channels to localStorage
         alert(`New channel ${channelName} created!`);
         updateChannelList();
         closeCreateChannelModal();
@@ -99,14 +123,20 @@ function updateChannelList() {
     });
 }
 
-// Function to display the channel messages (simulated for now)
+// Function to display the channel messages (now retrieves saved messages)
 function displayChannelMessages(channel) {
     // Clear existing messages
     document.getElementById('chat-box').innerHTML = '';
 
-    // Simulating messages for now, you can extend this to store messages per channel
-    const messageDiv = document.createElement('div');
-    messageDiv.classList.add('message');
-    messageDiv.textContent = `Welcome to ${channel} channel! Start chatting here.`;
-    document.getElementById('chat-box').appendChild(messageDiv);
+    // Retrieve saved messages for this channel
+    const messages = getMessages(channel);
+    messages.forEach(message => {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message');
+        messageDiv.textContent = message;
+        document.getElementById('chat-box').appendChild(messageDiv);
+    });
 }
+
+// Load the channel list when the page is loaded
+window.onload = updateChannelList;
